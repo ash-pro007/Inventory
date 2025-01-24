@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h2>{{ message }}</h2>
+
+    <h1>Welcome to the Home Page</h1>
+    {% if is_user_admin %}
+        <p>You are logged in as an admin.</p>
+        <form action="upload_file" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="file">Choose a file (CSV/Excel):</label>
+            <input type="file" id="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+    {% else %}
+        <p>You are logged in as a regular user.</p>
+    {% endif %}
+    
+</body>
+</html>

@@ -1,0 +1,79 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color:  #3e4684;;
+}
+
+.main-container{
+    background-color: #f1f7fe;
+    width: 20%; 
+    margin: 0 auto; 
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    padding-bottom: 3rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    border-radius: 20px;
+}
+
+.cred-container {
+    background-color: white;
+    margin-top: 10px;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+
+.cred-label {
+    color: rgb(77, 76, 76);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    
+}
+
+.inpt {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    border-style: solid;
+    border-bottom-width: 2px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    
+}
+
+.login-container {
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+.btn-login {
+    font-size: 1rem;
+    font-weight: 400;
+    background-color: #3e4684;
+    color: white;
+    height: 30px;
+    width: 200px;
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 0px;
+}
+
+
+.btn-signup {
+    font-size: .95rem;
+    background-color: inherit;
+    border: none;
+}
+
+.btn-login, .btn-signup:hover {
+    cursor: pointer;
+}
