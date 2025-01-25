@@ -1,11 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="{% static 'home.css' %}">
 </head>
 <body>
+    <div class="topnav">
+        <a class="active" href="home">Inventory Manager</a>
+
+        <div class="search-container">
+          <form action="search_product" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Search.." name="product">
+            <button type="submit">Search</i></button>
+          </form>
+
+        </div>
+
+        <div class="search-container">
+            <form action="search_by_quantity" method="POST">
+              {% csrf_token %}
+              <input type="text" placeholder="Filter.." name="quantity">
+              <button type="submit">Filter</i></button>
+            </form>
+  
+        </div>
+        
+        <form action="logout_user" method="POST">
+            {% csrf_token %}
+           
+            <button type="submit">Logout</i></button>
+        </form>
+        
+    </div>
+
     <h2>{{ message }}</h2>
 
     <h1>Welcome to the Home Page</h1>
@@ -20,6 +51,91 @@
     {% else %}
         <p>You are logged in as a regular user.</p>
     {% endif %}
+
+
+    <h1>Data Overview</h1>
+
+    <div class="main-container">
+        
+        {% if inv_dict is not None %}
+            {% for inventory, products in inv_dict %}
+            <div class="inventory-container">
+                <div class="heading-container">{{ inventory }}</div>
+                <hr>
+                {% if products %}
+                    {% for product in products %}
+                        <div>{{ product }}</div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <div>No products available</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!--  this container show the searched product only  -->
+
+        {% if searched_product is not None %}
+        
+        <div  class="searched-inventory-container">
+            <div class="searched-inventory-heading-container">{{searched_product}} is available in </div>
+           
+            {% for inventory in inventory_lst %}
+    
+                <div>{{ inventory }}</div>
+                <hr>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!--  this container show the filterd product only  -->
+        
+        {% if prod_dict is not None %}
+
+            {% for product, inventories in prod_dict %}
+            <div class="inventory-container">
+                <div class="heading-container">{{ product }}</div>
+                <hr>
+                {% if inventories %}
+                    {% for inventory in inventories %}
+                        <div>{{ inventory }}</div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <div>Product is not available in inventory</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+        {% endif %}
+
+
+     
+    </div>
+
+
+
+    <!-- <table>
+        <thead>
+            <tr>
+                <tr>Inventory</tr>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventory in inventories %}
+            <tr>
+                <td>{{ inventory.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> -->
+
+   
     
 </body>
 </html>
