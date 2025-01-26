@@ -43,7 +43,7 @@ pip install django
 ### 5. Navigate to the Project Directory
 Change into the `Inventory` project directory. Inside, you’ll find:
 - Folders: `Data_manager (app)`, `Inventory_manager (project)`, `static`, `templates`
-- File: `manage.py`
+- File: `manage.py`, `readme.txt`
 
 ---
 
