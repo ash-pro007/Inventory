@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Products_in_inventory',
+            name='Products_in_inventories',
             fields=[
                 ('name', models.CharField(max_length=25, primary_key=True, serialize=False)),
             ],
