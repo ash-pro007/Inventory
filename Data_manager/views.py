@@ -59,6 +59,7 @@ def register_user(request):
     return render(request, 'signup.html')
 
 
+# Login function 
 def login_user(request):
     if request.method == 'POST':
         # Getting user detail for login
@@ -78,7 +79,7 @@ def login_user(request):
     return login_page(request)
 
 
-
+# Function to render home page
 def home(request):
     global is_user_admin
 
@@ -112,12 +113,14 @@ def home(request):
         return redirect('login') 
     
 
+# Logout Function
 def logout_user(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
     return redirect('login')
 
 
+# Function to upload data via csv/excel file
 def upload_file(request):
     if request.method == 'POST':
     
@@ -165,6 +168,7 @@ def upload_file(request):
     return home(request)
 
 
+# Search individual product 
 def search_product(request):
     if request.method == 'POST':
         # Getting product name to search
@@ -192,6 +196,7 @@ def search_product(request):
     return render(request, 'home.html', {'is_user_admin': is_user_admin, 'inventories': [], 'inv_dict': {}, 'inventory_lst': inventory_lst, 'searched_product': product.capitalize() })
 
 
+# Function to search product by quantity/availability
 def search_by_quantity(request):
     if request.method == 'POST':
         quantity = request.POST['quantity'].strip()
@@ -251,56 +256,60 @@ def search_by_quantity(request):
 ## Extra functionalities 
 
 
+# Function to add a new inventory 
 def add_inventory(request):
     if request.method == 'POST':
-        inventory_to_add = request.POST['inventory-to-add'].strip() 
+        
+        inventory_to_add = request.POST['inventory-to-add'].strip()  # getting new inventory name
 
-        if Inventory.objects.filter(name=inventory_to_add).exists():
+        if Inventory.objects.filter(name=inventory_to_add).exists(): # checking if that inventory name already exists
             messages.error(request, f'{inventory_to_add}  already exists!')
         else:
-            new_inventory = Inventory(name=inventory_to_add)
-            new_inventory.save()
+            new_inventory = Inventory(name=inventory_to_add) # making object of Inventory model
+            new_inventory.save()                             # saving that object in db
             messages.success(request, f'{inventory_to_add}  added successfully!')
     
     return home(request)
 
 
+# Function to add a new product
 def add_product(request):
     if request.method == 'POST':
-        product_to_add = request.POST['product-to-add'].strip() 
+        product_to_add = request.POST['product-to-add'].strip()  # getting new product name
 
         if Product.objects.filter(name=product_to_add).exists():
-            messages.error(request, f'{product_to_add}  already exists!')
+            messages.error(request, f'{product_to_add}  already exists!') # checking if that product name already exists
         else:
-            new_inventory = Product(name=product_to_add)
-            new_inventory.save()
-            messages.success(request, f'{product_to_add}  added successfully!')
+            new_inventory = Product(name=product_to_add)  # making object of Product model
+            new_inventory.save()                          # saving that object in db
+            messages.success(request, f'{product_to_add}  added successfully!') 
     
     return home(request)
 
 
+# Function to add a existing product in an existing inventory
 def add_product_in_inventory(request):
     if request.method == 'POST':
-        product = request.POST['product-chk'].strip() 
-        inventory = request.POST['inventory-ch'].strip() 
+        product = request.POST['product-chk'].strip()  # getting product name
+        inventory = request.POST['inventory-ch'].strip() # getting product name
 
-        if not Product.objects.filter(name=product).exists():
+        if not Product.objects.filter(name=product).exists(): # making sure that the given product already exists to put in inventory
             messages.error(request, f'{product}  doesn\'t exist! Please add {product} first.')
             return home(request)
         
-        if not Inventory.objects.filter(name=inventory).exists():
+        if not Inventory.objects.filter(name=inventory).exists(): # making sure that the given inventory already exists
             messages.error(request, f'{inventory}  doesn\'t exist! Please add {inventory} first.')
             return home(request)
 
-        product_in_inventory = product + '_' + inventory
+        product_in_inventory = product + '_' + inventory  # create a new string in format 'Product_Inventory' to save in db
 
-        if Products_in_inventories.objects.filter(name=product_in_inventory).exists():
+        if Products_in_inventories.objects.filter(name=product_in_inventory).exists(): # again checking wheather that new format string already exists
             messages.error(request, f'{product}  already exists in {inventory} .')
             return home(request)
 
 
-        new_product_in_inventory = Products_in_inventories(name=product_in_inventory)
-        new_product_in_inventory.save()
+        new_product_in_inventory = Products_in_inventories(name=product_in_inventory) # makeing model object
+        new_product_in_inventory.save()                                               # saving that object in db
 
         messages.success(request, f'{product} has been succussfully added in {inventory}.')
 
@@ -313,8 +322,8 @@ def reset_database(request):
         Inventory.objects.all().delete()
         Product.objects.all().delete()
         Products_in_inventories.objects.all().delete()
-        messages.success(request, f'{product} has been succussfully added in {inventory}.')
-        print("All data from Inventory, Product, and Products_in_inventories tables has been deleted successfully!")
+
+        messages.success(request, 'Inventory has been successfully reset')
     except Exception as e:
         print(f"An error occurred while deleting data: {e}")
     return home(request)
