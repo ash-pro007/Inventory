@@ -26,6 +26,12 @@ urlpatterns = [
     path('search_by_quantity', views.search_by_quantity, name='search_by_quantity'),
     path('login_page/search_by_quantity', views.search_by_quantity, name='search_by_quantity'),
 
+    path('login_page/add_inventory', views.add_inventory, name='add_inventory'),
+    path('login_page/add_product', views.add_product, name='add_product'),
+    path('login_page/add_product_in_inventory', views.add_product_in_inventory, name='add_product_in_inventory'),
+
+    path('login_page/reset_database', views.reset_database, name='reset_database')
+
 
     
 ]

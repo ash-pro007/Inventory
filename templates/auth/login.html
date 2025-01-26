@@ -11,6 +11,8 @@
 </head>
 <body>
 
+    <!-- Message area to show success and error message -->
+
     {% if messages %}
         <ul>
             {% for message in messages %}
@@ -19,17 +21,23 @@
         </ul>
     {% endif %}
 
-    <h2>Inverntory Manager</h2>
+
+    <!--  Title  -->
+    <h2 class="title-head">Inverntory Manager</h2>
     <div class="main-container">
         <h2>Login</h2>
         
-        <form action="login_user" method="post">
+        <form action="login_user" method="post">  <!-- Form to verify user -->
             {% csrf_token %}
+
+            <!-- Username input container -->
             <div class="cred-container">
                 <label class="cred-label">Username</label>
                 <br>
                 <input class="inpt" type="text" placeholder="Enter username" name="username"> 
             </div>
+            
+            <!-- Password input container -->
             <div class="cred-container">
     
                 <label class="cred-label">Confirm Password</label>
@@ -37,12 +45,14 @@
                 <input class="inpt" type="password" placeholder="Enter password" name="password"> 
             
             </div>
-    
+            
+            <!-- Login button container -->
             <div class="login-container">
                 <button class="btn-login" type="submit">Login</button>
             </div>
         </form>
 
+        <!-- Signup button to switch from login page to signup page -->
         <form action="signup">
             <div class="signup-container">
                 <button type="submit" class="btn-signup">Signup</button>

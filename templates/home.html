@@ -8,14 +8,17 @@
     <link rel="stylesheet" href="{% static 'home.css' %}">
 </head>
 <body>
+
+    <!-- ------------------ Nav bar  ----------------- -->
+
     <div class="topnav">
         <a class="active" href="home">Inventory Manager</a>
 
         <div class="search-container">
           <form action="search_product" method="POST">
             {% csrf_token %}
-            <input type="text" placeholder="Search.." name="product">
-            <button type="submit">Search</i></button>
+            <input class="input-search" type="text" placeholder="Search.." name="product">
+            <button  class="search-btn" type="submit">Search</i></button>
           </form>
 
         </div>
@@ -23,67 +26,157 @@
         <div class="search-container">
             <form action="search_by_quantity" method="POST">
               {% csrf_token %}
-              <input type="text" placeholder="Filter.." name="quantity">
-              <button type="submit">Filter</i></button>
+              <input class="input-search" type="text" placeholder="Filter.." name="quantity">
+              <button class="search-btn" type="submit">Filter</i></button>
             </form>
   
         </div>
         
-        <form action="logout_user" method="POST">
-            {% csrf_token %}
-           
-            <button type="submit">Logout</i></button>
-        </form>
+        <div class="logout-btn-container">
+            <form action="logout_user" method="POST">
+                {% csrf_token %}
+                <button class="logout-btn" type="submit">Logout</i></button>
+            </form>
+        </div>
         
     </div>
 
-    <h2>{{ message }}</h2>
+    <!-- ---------------- Nav bar ends --------------- -->
 
-    <h1>Welcome to the Home Page</h1>
-    {% if is_user_admin %}
-        <p>You are logged in as an admin.</p>
-        <form action="upload_file" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="file">Choose a file (CSV/Excel):</label>
-            <input type="file" id="file" name="file" required>
-            <button type="submit">Upload</button>
-        </form>
-    {% else %}
-        <p>You are logged in as a regular user.</p>
+
+    <!-- ---------------- Message ----------------  -->
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
+    <!-- -------------- Message ends -------------- -->
+    
 
-    <h1>Data Overview</h1>
+    <!-- ---------------- Admin Panel ---------------- -->
+
+    <!-- only accessable to Admin -->
+
+    {% if is_user_admin %}
+        <div class="admin-panel-continer">
+
+            <!-- ---------------- Section to upload csv/excel file ---------------- -->
+
+            <div class="admin-panel-inner-container">
+                <h1>Admin Panel</h1>
+                <form action="upload_file" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label class="lbl-choose" for="file">Choose a file (CSV/Excel):</label>
+                    <input  type="file" id="file" name="file" required>
+                    <button  class="upload-btn" type="submit">Upload</button>
+                  
+                    <button  type="button" class="cust-btn" onclick="openCustomUploadPannel()" >Custom Upload</button>
+             
+                </form>
+            </div>
+
+            <!-- -------------- Section to upload csv/excel file ends -------------- -->
+
+            <!-- ------- Section to add new Inventories, Products and add Products in Inventories without csv/excel file  ------- -->
+
+          
+            <div class="add-custom-container" id="cust-container">
+                
+                <!-- -------------------- Section to add new Inventory -------------------- -->
+                <div class="add-container">
+                    <form action="add_inventory" method="POST">
+                        {% csrf_token %}
+                        <label class="lbl-cust" for="">Add Inventory</label>
+                        <input class="add-inpt" type="text" name="inventory-to-add" placeholder="Enter inventory name"/>
+                        <button type="submit" class="add-btn">Add Inventory</button>
+                    </form>
+                </div>
+                <!-- ------------------ Section to add new Inventory ends ------------------ -->
+                
+                <!-- -------------------- Section to add new Product -------------------- -->
+                <div class="add-container">
+                    <form action="add_product" method="POST">
+                        {% csrf_token %}
+                        <label style="margin-right: 12px;" class="lbl-cust" for="">Add Product</label>
+                        <input class="add-inpt" type="text" name="product-to-add" placeholder="Enter product name"/>
+                        <button type="submit" class="add-btn">Add Product</button>
+                    </form>
+                </div>
+                <!-- ------------------ Section to add new Product ends ------------------ -->
+
+                <!-- ------ Section to add existing Product in existing Inventory -------- -->
+                <div class="add-container">
+                    <form action="add_product_in_inventory" method="POST">
+                        {% csrf_token %}
+                        <label class="lbl-cust" for="">Add Product in Inventory</label>
+                        <input class="add-inpt" type="text" name="product-chk" placeholder="Enter product name"/>
+                        <input class="add-inpt" type="text" name="inventory-ch" placeholder="Enter inventory name"/>
+                        <button type="submit" class="add-btn">Add Proudct in Inventory</button>
+                    </form>
+                </div>
+                <!-- ---- Section to add existing Product in existing Inventory ends ------ -->
+                
+                <!-- -------------------- Section to reset database (delete every thing from every table) -------------------- -->
+                <div class="clear-inventory-container">
+                    <form action="reset_database" method="POST">
+                        {% csrf_token %}
+                        <button  class="clear-btn" type="submit" onclick="return confirm('Do you really want delete all the data');">Clear Inventory</button>
+                    </form>
+                </div>
+                <!-- -------------------------- Section to reset database ends  ---------------------------------------------- -->
+
+            </div>
+
+            <!-- ----------------------------------------- Section ends ---------------------------------------------------------->
+
+        </div>
+
+    {% else %}
+    {% endif %}
+
+     <!-- -------------- Admin Panel ends -------------- -->
+
+    <h1 style="margin-top: 40px;">Data Overview</h1>
 
     <div class="main-container">
         
-        {% if inv_dict is not None %}
+        <!-- Container to show all the products in their respective inventories -->
+
+        {% if inv_dict is not None %}  <!-- Check for valid dictionary -->
             {% for inventory, products in inv_dict %}
-            <div class="inventory-container">
+            <div class="inventory-container"> <!--  div container for each inventory -->
                 <div class="heading-container">{{ inventory }}</div>
                 <hr>
-                {% if products %}
-                    {% for product in products %}
-                        <div>{{ product }}</div>
-                        <hr>
-                    {% endfor %}
-                {% else %}
-                    <div>No products available</div>
-                {% endif %}
+                <div class="product-container">
+                    {% if products %}
+                        {% for product in products %}
+                            <div>{{ product }}</div> <!-- div hold product name -->
+                            <hr>
+                        {% endfor %}
+                    {% else %}
+                        <div>No products available</div>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         {% endif %}
 
-        <!--  this container show the searched product only  -->
+        <!-- ----------- Container to show all the products ends ----------- -->
+
+        <!--  Container show the searched product only  -->
 
         {% if searched_product is not None %}
         
         <div  class="searched-inventory-container">
-            <div class="searched-inventory-heading-container">{{searched_product}} is available in </div>
+            <div class="searched-inventory-heading-container">{{searched_product}} is available in </div> <!-- div shows searched prouduct -->
            
             {% for inventory in inventory_lst %}
     
-                <div>{{ inventory }}</div>
+                <div>{{ inventory }}</div> <!-- div shows where the searched product exists in which inventories -->
                 <hr>
 
             {% endfor %}
@@ -91,51 +184,51 @@
         </div>
 
         {% endif %}
+         <!--  Container show the searched product ends -->
 
-
-        <!--  this container show the filterd product only  -->
+        <!--   Container show the filterd product only  -->
         
         {% if prod_dict is not None %}
 
             {% for product, inventories in prod_dict %}
             <div class="inventory-container">
-                <div class="heading-container">{{ product }}</div>
+                <div class="heading-container">{{ product }}</div>  <!-- div holds one product and multiple inventories where product exists-->
                 <hr>
-                {% if inventories %}
+                <div class="inventory-container2">
+                    {% if inventories %}
                     {% for inventory in inventories %}
-                        <div>{{ inventory }}</div>
+                        <div>{{ inventory }}</div>  <!--  div show inventory -->
                         <hr>
-                    {% endfor %}
-                {% else %}
-                    <div>Product is not available in inventory</div>
-                {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div>Product is not available in inventory</div>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
 
         {% endif %}
 
-
+        <!--   Container show the filterd product ends  -->
      
     </div>
 
 
+    <script>
+        
+        isCustomAddConatinerVisiable = false;
 
-    <!-- <table>
-        <thead>
-            <tr>
-                <tr>Inventory</tr>
-            </tr>
-        </thead>
-        <tbody>
-            {% for inventory in inventories %}
-            <tr>
-                <td>{{ inventory.name }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
-
-   
-    
+        // Js function to show/hide custom data upload
+        function openCustomUploadPannel() {
+            if (!isCustomAddConatinerVisiable) {
+                document.getElementById('cust-container').style.display = 'block';
+                isCustomAddConatinerVisiable = true;
+            } else {
+                document.getElementById('cust-container').style.display = 'none';
+                isCustomAddConatinerVisiable = false;
+            }
+        }
+    </script>
+ 
 </body>
 </html>

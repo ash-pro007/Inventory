@@ -1,31 +1,24 @@
 body {
+    margin: 0px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
 /*  ----------------- nav bar ----------------- */
-* {box-sizing: border-box;}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 .topnav {
   overflow: hidden;
-  background-color: #e9e9e9;
+  background-color: #c6d5e7;
   display: flex;
-  justify-content: space-between;
+  margin-bottom: 2.8rem;
 }
 
-.topnav a {
-  float: left;
-  display: block;
-  color: black;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
+a {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-right: 20%;
+  text-decoration: none; 
+  padding: 5px;
 }
 
 .topnav a:hover {
@@ -38,30 +31,31 @@ body {
   color: white;
 }
 
-.topnav .search-container {
-  float: right;
+
+.input-search {
+  border-style: solid;
+  border-width: 0px;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  font-size: .8rem;
+  font-weight: 400;
+  height: 1.3rem;
+  width: 10rem;
+  padding-left: 10px;
+  margin-right: -5px;
+  margin-top: 5px;
 }
 
-.topnav input[type=text] {
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 17px;
-  border: none;
+.search-container {
+  margin-right: 20px;
+  margin-top: 12px;
 }
 
-.topnav .search-container button {
-  float: right;
-  padding: 6px 10px;
-  margin-top: 8px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
+.search-container:hover {
+  outline: none;
 }
-
-.topnav .search-container button:hover {
-  background: #ccc;
+.search-container:focus {
+  outline: none;
 }
 
 @media screen and (max-width: 600px) {
@@ -81,20 +75,113 @@ body {
   }
 }
 
+.logout-btn-container {
+  margin-top: 12px;
+  margin-left: 25rem;
+}
+
+
+.logout-btn {
+  font-size: 1rem;
+  font-weight: 400;
+  background-color: #3e4684;
+  color: white;
+  height: 30px;
+  width: 150px;
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 0px;
+ 
+}
+
+.logout-btn:hover {
+
+}
+
+
+
+
+.search-btn {
+  font-size: .8rem;
+  font-weight: 400;
+  background-color: #3e4684;
+  color: white;
+  height: 1.4rem;
+  width: 5rem;
+  border-style: solid;
+  border-width: 0px;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  
+}
+
+.search-btn:hover , .logout-btn:hover , .upload-btn:hover , .cust-btn:hover{
+  box-shadow: 1px 1px 1px 1px #63656d;
+  cursor: pointer;
+
+}
+
 
 /*  --------------- nav bar ends --------------- */
 
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.lbl-choose {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 20px;
+}
+
+.admin-panel-continer {
+  margin-top: 5rem;
+  margin-bottom: 4rem;
+  width: 80%;
+  margin: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+.admin-panel-inner-container {
+
+}
+
+/* box-shadow: 1px 1px 1px 1px #888888; */
+
 .main-container {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: 2rem;
 }
 
 .inventory-container {
-    min-width: 7rem;
+    width: 11rem;
+    
     margin: 20px;
     background-color: #f1f7fe;
     padding: 15px;
-    
+    border-radius: 5px;
+    /* height: 15rem;
+    overflow: auto; */
 }
+
+.product-container {
+  height: 20rem;
+  overflow: auto;
+}
+
+.inventory-container2{
+  height: 22rem;
+  overflow: auto;
+}
+
 
 .heading-container {
     font-size: 1.2rem;  
@@ -123,4 +210,95 @@ body {
     padding: 15px;
     flex-direction: column;
     font-size: 1.2rem;
+}
+
+.upload-btn {
+  font-size: .9rem;
+  font-weight: 400;
+  background-color: #3e4684;
+  color: white;
+ 
+  width: inherit;
+  padding: 0.5rem 1rem .5rem 1rem;
+  border-style: solid;
+  border-width: 0px;
+  border-radius: 20px;
+  margin-left: 380px
+  margin-left: -30px;
+}
+
+.cust-btn {
+  font-size: .9rem;
+  font-weight: 400;
+  background-color: #3e4684;
+  color: white;
+ 
+  width: inherit;
+  padding: 0.5rem 1rem .5rem 1rem;
+  border-style: solid;
+  border-width: 0px;
+  border-radius: 20px;
+  margin-left: 380px
+}
+
+.upload-btn:hover {
+  
+}
+
+.add-custom-container {
+  display: none;
+  margin-top: 4rem;
+  margin-left: 2rem;
+  font-size: 1.2rem;
+}
+
+.add-btn {
+  font-size: .9rem;
+  font-weight: 400;
+  background-color: #3e4684;
+  color: white;
+ 
+  width: inherit;
+  padding: 0.5rem 1rem .5rem 1rem;
+  border-style: solid;
+  border-width: 0px;
+  border-radius: 20px;
+  margin-left: 80px;
+}
+
+.add-container {
+  margin-top: 2rem;
+}
+
+.add-inpt {
+  font-size: 1rem;
+  padding: 4px;
+  border-radius: 5px;
+}
+
+.lbl-cust {
+  min-width: 15rem;
+}
+
+.clear-btn {
+  font-size: .9rem;
+  font-weight: 400;
+  background-color: #df4c4c;
+  color: white;
+ 
+  width: inherit;
+  padding: 0.5rem 1rem .5rem 1rem;
+  border-style: solid;
+  border-width: 0px;
+  border-radius: 20px;
+ 
+}
+
+.clear-inventory-container {
+  margin-top: 4rem;
+}
+
+.add-btn:hover , .clear-btn:hover {
+  box-shadow: 1px 1px 1px 1px #63656d;
+  cursor: pointer;
 }

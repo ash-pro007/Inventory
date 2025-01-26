@@ -2,10 +2,11 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h2 {
+.title-head {
     margin-bottom: 2rem;
     font-size: 2rem;
     color:  #3e4684;;
+    padding-left: 1rem;
 }
 
 .main-container{

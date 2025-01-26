@@ -1,42 +1,38 @@
 from django.shortcuts import render, redirect
-
 from django.http import HttpResponse
-
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.contrib.auth import logout
-
+from django.contrib.auth import authenticate, login, logout
 import pandas as pd
 from .models import Inventory, Product, Products_in_inventories
 
-
-# Create your views here.
-
+# This varible will specify wheather user is admin or not 
 is_user_admin = False
 
+# Function to show login page
 def login_page(request):
     return render(request, 'auth/login.html')
 
-
+# Function to show signup page
 def signup(request):
     return render(request, 'auth/signup.html')
 
-
+# Function to show home page
 def home(request):
     return HttpResponse("Hello World Django")
 
 
+# Function to create new user
 def register_user(request):
     if request.method == 'POST':
+        # Getting all user details
         username = request.POST.get('username')
-   
+    
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
 
-     
+        # verifying details 
         if not username or not password1 or not password2:
             messages.error(request, 'All fields are required.')
             return render(request, 'signup.html')
@@ -49,6 +45,7 @@ def register_user(request):
             messages.error(request, 'Username already exists.')
             return render(request, 'signup.html')
         
+        # Creating new user
         user = User.objects.create(
             username=username,
             password=make_password(password1) 
@@ -64,10 +61,11 @@ def register_user(request):
 
 def login_user(request):
     if request.method == 'POST':
+        # Getting user detail for login
         username = request.POST['username']
         password = request.POST['password']
 
-      
+        # authenticating user from database
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -80,42 +78,12 @@ def login_user(request):
     return login_page(request)
 
 
-def logout_user(request):
-    logout(request)
-    return redirect('login')
 
 def home(request):
     global is_user_admin
 
     if request.user.is_authenticated:
         is_user_admin = request.user.is_superuser
-        
-        # 
-
-        # inv_dict = {}
-
-        # inventories = Inventory.objects.all()
-
-        # for i in inventories:
-        #     inv_dict.update({i.name: []})
-
-        # print(inv_dict)
-
-        # products_in_inven = Products_in_inventories.objects.all()
-
-        # for i in products_in_inven:
-
-        #     pin = i.name
-
-        #     lst = pin.split('_')
-        #     prod = lst[0]
-        #     inven = lst[1]
-
-        #     tem_prod_lst = inv_dict.get(inven)
-
-        #     tem_prod_lst.append(prod)
-
-        #     inv_dict.update({inven: tem_prod_lst})
 
         inv_dict = {}
 
@@ -136,14 +104,8 @@ def home(request):
             # Append the product to the appropriate inventory's list
             if inven in inv_dict:
                 inv_dict[inven].append(prod)
+                inv_dict[inven] = sorted(inv_dict[inven], key=lambda x: int(x[7:]))
 
-        # Debugging - Print the resulting dictionary
-        # print("\n\n\n")
-        # print(inv_dict)
-        # print("\n\n\n")
-
-
-        # print("\n\n\nThe dictionary after::::::::: ", inv_dict, "\n\n\n\n")
      
         return render(request, 'home.html', {'is_user_admin': is_user_admin, 'inventories': inventories, 'inv_dict': inv_dict.items()})
     else:
@@ -158,15 +120,15 @@ def logout_user(request):
 
 def upload_file(request):
     if request.method == 'POST':
-        # Get the uploaded file
+    
         uploaded_file = request.FILES.get('file')
 
-        # Check if a file was uploaded
+        # Checking wheather file is uploaded
         if not uploaded_file:
             messages.success(request, 'Please upload a file.')
             return home(request)
 
-        # Process the uploaded file
+        # Identifying file format
         if uploaded_file.name.endswith('.csv'):
             df = pd.read_csv(uploaded_file)
         elif uploaded_file.name.endswith(('.xls', '.xlsx')):
@@ -177,7 +139,7 @@ def upload_file(request):
 
         # Save Inventories
         for column in df.columns[1:]:
-            inventory_name = column.strip()  # Column names represent inventories
+            inventory_name = column.strip() 
             Inventory.objects.get_or_create(name=inventory_name)
 
         # Save Products and their mapping to inventories
@@ -205,24 +167,28 @@ def upload_file(request):
 
 def search_product(request):
     if request.method == 'POST':
+        # Getting product name to search
         product = request.POST['product']
-
+        
+        # Removing any extra spaces 
         product = product.strip().lower()
 
+        # fetching all the products with their respected inventories
         products_in_inven = Products_in_inventories.objects.all()
 
+        # list of inventories in which search product is present 
         inventory_lst = []
 
         for i in products_in_inven:
             val = i.name
-            
             val = val.split('_')
-     
+            # compairng searched product string and searched product in inventory
+            # if searched product is found in inventory then that inventory is add to the  inventory_lst
             if val[0].lower() == product:
                 inventory_lst.append(val[1])
 
-        print('\n\n invetnroy lst ------------>  ', inventory_lst)
-
+    inventory_lst = sorted(inventory_lst, key=lambda x: int(x.split()[1]))
+        # returning the results
     return render(request, 'home.html', {'is_user_admin': is_user_admin, 'inventories': [], 'inv_dict': {}, 'inventory_lst': inventory_lst, 'searched_product': product.capitalize() })
 
 
@@ -249,9 +215,9 @@ def search_by_quantity(request):
             # Append the product to the appropriate inventory's list
             if prod in prod_dict:
                 prod_dict[prod].append(inven)
+
         
      
-
         # Extacting the products which are avaiable in equal or more inventories 
         # putting them in a new list
 
@@ -277,5 +243,79 @@ def search_by_quantity(request):
             # Append the product to the appropriate inventory's list
             if prod in prod_dict:
                 prod_dict[prod].append(inven)
+                prod_dict[prod] = sorted(prod_dict[prod], key=lambda x: int(x.split()[1]))
 
     return render(request, 'home.html', {'is_user_admin': is_user_admin, 'inventories': [], 'inv_dict': {}, 'prod_dict': prod_dict.items()})
+
+
+## Extra functionalities 
+
+
+def add_inventory(request):
+    if request.method == 'POST':
+        inventory_to_add = request.POST['inventory-to-add'].strip() 
+
+        if Inventory.objects.filter(name=inventory_to_add).exists():
+            messages.error(request, f'{inventory_to_add}  already exists!')
+        else:
+            new_inventory = Inventory(name=inventory_to_add)
+            new_inventory.save()
+            messages.success(request, f'{inventory_to_add}  added successfully!')
+    
+    return home(request)
+
+
+def add_product(request):
+    if request.method == 'POST':
+        product_to_add = request.POST['product-to-add'].strip() 
+
+        if Product.objects.filter(name=product_to_add).exists():
+            messages.error(request, f'{product_to_add}  already exists!')
+        else:
+            new_inventory = Product(name=product_to_add)
+            new_inventory.save()
+            messages.success(request, f'{product_to_add}  added successfully!')
+    
+    return home(request)
+
+
+def add_product_in_inventory(request):
+    if request.method == 'POST':
+        product = request.POST['product-chk'].strip() 
+        inventory = request.POST['inventory-ch'].strip() 
+
+        if not Product.objects.filter(name=product).exists():
+            messages.error(request, f'{product}  doesn\'t exist! Please add {product} first.')
+            return home(request)
+        
+        if not Inventory.objects.filter(name=inventory).exists():
+            messages.error(request, f'{inventory}  doesn\'t exist! Please add {inventory} first.')
+            return home(request)
+
+        product_in_inventory = product + '_' + inventory
+
+        if Products_in_inventories.objects.filter(name=product_in_inventory).exists():
+            messages.error(request, f'{product}  already exists in {inventory} .')
+            return home(request)
+
+
+        new_product_in_inventory = Products_in_inventories(name=product_in_inventory)
+        new_product_in_inventory.save()
+
+        messages.success(request, f'{product} has been succussfully added in {inventory}.')
+
+    return home(request)
+
+
+def reset_database(request):
+    try:
+        # Delete all data from each model
+        Inventory.objects.all().delete()
+        Product.objects.all().delete()
+        Products_in_inventories.objects.all().delete()
+        messages.success(request, f'{product} has been succussfully added in {inventory}.')
+        print("All data from Inventory, Product, and Products_in_inventories tables has been deleted successfully!")
+    except Exception as e:
+        print(f"An error occurred while deleting data: {e}")
+    return home(request)
+  
